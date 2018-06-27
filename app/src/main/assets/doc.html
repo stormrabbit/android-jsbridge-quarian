@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>呀哈哈来跳舞呀</title>
+
+</head>
+
+<body>
+<div id="app">
+    js android 交互测试
+    <p>
+        <button id="btn1">js2Android</button>
+        <button id="btn2" style="margin-left: 5px">清空</button>
+    </p>
+
+    <p id="mark"></p>
+</div>
+<script>
+    MARK_PHRASE = "我在广阔的星际间漂流，与光之大潮一同前行，穿越无尽的星辰。在度过漫长的旅程之后，我将会回到我生命开始的地方。";
+    const SECHEMA = 'GETH';
+    window.geth = {
+      callbacks: {},
+      call: function (obj, method, params, callback) {
+        const callBackNo = this.getCallBackNo();
+        this.callbacks[callBackNo] = callback;
+        const uri = this.getUri(obj, method, params, callBackNo);
+        window.prompt(uri);
+      },
+      onExecute: function (callBackNo, params) {
+        if (!!this.callbacks[callBackNo]) {
+          this.callbacks[callBackNo](params);
+          delete this.callbacks[callBackNo];
+        }
+      },
+      getCallBackNo: () => Math.floor(Math.random() * (1 << 30)),
+      getUri: (obj, method, params, callBackNo) => `${SECHEMA}://${obj}:${callBackNo}/${method}?${params}`
+    };
+
+
+    document.getElementById('btn1').onclick = () => {
+      const {
+        geth
+      } = window;
+      geth.call('Tali', 'onToast', MARK_PHRASE, res => mark(res));
+
+    }
+
+    document.getElementById('btn2').onclick = () => {
+      mark('');
+    }
+    const android2js = (msg) => {
+      mark(msg);
+    }
+
+    const mark = (msg) => {
+      document.getElementById('mark').innerText = msg
+    }
+  </script>
+</body>
+
+</html>
